@@ -101,7 +101,7 @@ def gerar_pdf(request):
         form = FotoForm(request.POST, request.FILES)  # Não se esqueça de passar request.FILES
         if form.is_valid():
             form.save()  # Salva o novo objeto Foto no banco de dados
-            return redirect('CreatePDF')  # Redireciona para a mesma página após salvar
+            return redirect('gerar_pdf_view')  # Redireciona para a mesma página após salvar
     else:
         form = FotoForm()
 
@@ -109,21 +109,28 @@ def gerar_pdf(request):
 
 
 def fotos_por_sitio(request):
-    sitios = Sitio.objects.all()  # Pega todos os Sitios
-    fotos = []
+    sitios = Sitio.objects.all()  # Obtém todos os sitios
+    fotos = None
+    nome_sitio = None
     sitio_selecionado = None
-    nome_sitio = ''
 
     if request.method == 'POST':
-        sitio_selecionado = request.POST.get('sitio')  # Pega o id do sitio selecionado
-        if sitio_selecionado:
-            fotos = Foto.objects.filter(idsitio=sitio_selecionado)  # Pega as fotos do sitio
-            sitio_selecionado_obj = Sitio.objects.get(id=sitio_selecionado)  # Pega o objeto do sitio
-            nome_sitio = sitio_selecionado_obj.nome  # Nome do sitio
+        # Obtém o id do Sitio selecionado a partir do formulário
+        sitio_id = request.POST.get('sitio')
+        if sitio_id:
+            sitio_selecionado = sitio_id
+            sitio = get_object_or_404(Sitio, idsitio=sitio_id)
+            fotos = Foto.objects.filter(idsitio=sitio)  # Filtra fotos relacionadas ao Sitio selecionado
+            nome_sitio = sitio.nome  # Nome do sitio para exibir na tela
 
     return render(request, 'fotos_por_sitio.html', {
         'sitios': sitios,
-        'fotos': fotos,
         'sitio_selecionado': sitio_selecionado,
+        'fotos': fotos,
         'nome_sitio': nome_sitio
     })
+
+def delete_foto(request, foto_id):  # Alterado para foto_id
+    foto = get_object_or_404(Foto, idfoto=foto_id)  # usa o campo idfoto
+    foto.delete()
+    return redirect('fotos_por_sitio')

@@ -3,40 +3,79 @@
 {% block title %}Administração - {{ site_header }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid" style="background-color: #536eb3; color: white; padding: 20px;">
-    <h1 class="text-center mb-4">{{ site_header }}</h1>
-
+<div class="container-fluid">
     <div class="text-center mb-4">
-        <a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar Novo</a>
-        {% if object %}
-            <a href="{% url 'admin:behive_reporter_change' object.id %}" class="btn btn-custom">Editar</a>
-            <form action="{% url 'admin:behive_reporter_delete' object.id %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-custom">Excluir</button>
-            </form>
-        {% endif %}
+        <h1>{{ site_header }}</h1>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            {% block content_main %}
-            <h2>Gerenciar Dados</h2>
-            <p>Utilize as opções abaixo para gerenciar os dados:</p>
-            <hr>
-            {% for app in app_list %}
-                <div class="app-list mb-4">
-                    <h3>{{ app.name }}</h3>
-                    <ul class="list-unstyled">
-                        {% for model in app.models %}
-                            <li class="mb-2">
-                                <a href="{{ model.admin_url }}" class="btn btn-link text-white">{{ model.name }}</a> <!-- Link como botão -->
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-            {% endblock %}
-        </div>
-    </div>
+    <!-- Tabela para exibir os dados de gerenciamento -->
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Área</th>
+                <th>Adicionar</th>
+                <th>Modificar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Autenticação e Autorização</strong></td>
+                <td><a href="{% url 'admin:auth_group_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:auth_group_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Grupos</strong></td>
+                <td><a href="{% url 'admin:auth_group_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:auth_group_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Usuários</strong></td>
+                <td><a href="{% url 'admin:auth_user_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:auth_user_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Reporter</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Administradores</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Empresas</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Fotos</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Relatório Finais</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Sitios</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Tecnicos</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+            <tr>
+                <td><strong>Template Relatórios</strong></td>
+                <td><a href="{% url 'admin:behive_reporter_add' %}" class="btn btn-custom">Adicionar</a></td>
+                <td><a href="{% url 'admin:behive_reporter_change' %}" class="btn btn-custom">Modificar</a></td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
+
 {% endblock %}

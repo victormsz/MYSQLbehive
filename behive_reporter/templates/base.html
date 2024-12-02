@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Behive Reporter{% endblock %}</title>
+    <!-- Bootstrap 4 CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa; /* Cor de fundo padrão */
+            background-color: #f8f9fa; /* Cor de fundo */
+            font-family: Arial, sans-serif;
         }
+
         .navbar-custom {
-            background-color: #536eb3; /* Cor personalizada para o navbar */
+            background-color: #536eb3; /* Cor personalizada para a navbar */
         }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+        }
+
         .btn-custom {
             background-color: white;
             color: #536eb3; /* Cor do texto */
@@ -21,17 +29,46 @@
             transition: background-color 0.3s, color 0.3s;
             margin-bottom: 10px;
         }
+
         .btn-custom:hover {
             background-color: #536eb3; /* Azul ao passar o mouse */
             color: white; /* Texto branco ao passar o mouse */
+        }
+
+        .container-fluid {
+            margin-top: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        /* Estilos para as colunas da tabela */
+        .thead-dark {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table td a {
+            width: 100%;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">Behive Reporter</a>
+        <a class="navbar-brand" href="{% url 'home' %}">Reporter</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -57,13 +94,16 @@
     </div>
 </nav>
 
+<!-- Conteúdo da Página -->
 <div class="container mt-4">
     {% block content %}
     {% endblock %}
 </div>
 
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

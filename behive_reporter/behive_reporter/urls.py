@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from reporter.views import SignUpView , gerar_pdf, fotos_por_sitio , Create_pdf , gerar_pdf_view
+from reporter.views import SignUpView , gerar_pdf, fotos_por_sitio , Create_pdf , gerar_pdf_view, delete_foto
 from django.urls import path
 
 
@@ -32,7 +32,7 @@ urlpatterns = [
     path('fotos/', fotos_por_sitio, name='fotos_por_sitio'),
     path('gerar_pdf/', gerar_pdf_view, name='gerar_pdf_view'),
     path('create_pdf/<int:sitio_id>/', Create_pdf, name='create_pdf'),
-    
+    path('delete-foto/<int:idfoto>/', delete_foto, name='delete_foto'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

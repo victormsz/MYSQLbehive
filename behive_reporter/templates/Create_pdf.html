@@ -23,18 +23,7 @@
     {% if sitio_selecionado %}
         <h2>Fotos do Sitio Selecionado:</h2>
         <!-- Aqui você pode exibir as fotos ou qualquer outra informação relacionada ao sitio -->
-        {% if fotos %}
-        <h2>Fotos do Sitio "{{ nome_sitio }}":</h2>
-        <div class="row mt-4">
-            {% for foto in fotos %}
-                <div class="col-md-4">
-                    <img src="{{ foto.foto.url }}" class="img-fluid" alt="{{ foto.descricao }}">
-                    <p><strong>{{ foto.nome }}</strong></p>
-                    <p>{{ foto.descricao }}</p>
-                </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+         
         
         <!-- Link para gerar o PDF -->
         <a href="{% url 'create_pdf' sitio_id=sitio_selecionado %}" class="btn btn-success mt-3">Gerar PDF</a>
