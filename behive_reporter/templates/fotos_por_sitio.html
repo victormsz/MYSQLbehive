@@ -1,35 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h1>Selecione um Sitio para Ver as Fotos</h1>
+<div class="container mt-4">
+    <h1>Selecione um Sítio para Ver as Fotos</h1>
     
     <!-- Formulário para selecionar o sitio -->
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="sitio">Escolha um Sitio:</label>
+            <label for="sitio">Escolha um Sítio:</label>
             <select name="sitio" id="sitio" class="form-control">
-                <option value="">Selecione um Sitio</option>
+                <option value="">Selecione um Sítio</option>
                 {% for sitio in sitios %}
-                    <option value="{{ sitio.id }}" {% if sitio.id == sitio_selecionado %}selected{% endif %}>{{ sitio.nome }}</option>
+                    <option value="{{ sitio.idsitio }}" {% if sitio.idsitio == sitio_selecionado %}selected{% endif %}>{{ sitio.nome }}</option>
                 {% endfor %}
             </select>
         </div>
-        <button type="submit" class="btn btn-primary mt-2">Ver Fotos</button>
+        <button type="submit" class="btn btn-custom mt-2">Ver Fotos</button>
     </form>
 
     {% if fotos %}
-        <h2>Fotos do Sitio "{{ nome_sitio }}":</h2>
+        <h2 class="mt-4">Fotos do Sítio "{{ nome_sitio }}":</h2>
         <div class="row mt-4">
             {% for foto in fotos %}
-                <div class="col-md-4">
-                    <img src="{{ foto.foto.url }}" class="img-fluid" alt="{{ foto.descricao }}">
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ foto.foto.url }}" class="card-img-top img-fluid" alt="{{ foto.descricao }}">
+                        <div class="card-body">
+                            <p class="card-text">{{ foto.descricao }}</p>
+                            {% if foto.idfoto %}
+                            <form method="post" action="{% url 'delete_foto' foto.idfoto %}" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        {% else %}
+                            <p class="text-muted">ID da foto não encontrado, não é possível excluir.</p>
+                        {% endif %}
+                        
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         </div>
+        
+
     {% elif sitio_selecionado %}
-        <p>Nenhuma foto encontrada para o sitio selecionado.</p>
+        <p class="mt-4">Nenhuma foto encontrada para o sítio selecionado.</p>
     {% endif %}
 </div>
 {% endblock %}
