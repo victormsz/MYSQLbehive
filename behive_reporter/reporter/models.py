@@ -97,15 +97,11 @@ class Empresa(models.Model):
 
 
 def default_pedidos_fotos():
-    return [
-        {"descricao": "Preencha a descrição aqui", "tipo": "Preencha o tipo aqui"},
-        {"descricao": "Preencha a descrição aqui", "tipo": "Preencha o tipo aqui"}
-    ]
+    return [{"descricao": "Foto 1"}, {"descricao": "Foto 2"}]
 
 class TemplateRelatorio(models.Model):
     idtemplate_relatorio = models.AutoField(primary_key=True)
-    
-    # Usando a função para o valor padrão
+    nome = models.CharField(max_length=45, default="")  # Nome do template
     pedidos_fotos = models.JSONField(
         default=default_pedidos_fotos,
         help_text="Especifique as fotos que precisam ser solicitadas para este relatório em formato JSON."
@@ -114,22 +110,21 @@ class TemplateRelatorio(models.Model):
     idempresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Template {self.idtemplate_relatorio}"
+        return f"Template: {self.nome} (ID: {self.idtemplate_relatorio})"
 
-
-from django.db import models
 
 class RelatorioFinal(models.Model):
-    idrelatorio_final = models.AutoField(primary_key=True)
+    idrelatorio_final = models.AutoField(primary_key=True) #
+    nome= models.CharField(max_length=45) #
     endereco_server = models.CharField(max_length=150, blank=True, null=True, editable=False)
-    tecnico_responsavel = models.ForeignKey('Tecnico', on_delete=models.CASCADE)
-    idsitio = models.ForeignKey('Sitio', on_delete=models.CASCADE)
-    idtemplate_relatorio = models.ForeignKey('TemplateRelatorio', on_delete=models.CASCADE)
-    data = models.DateField()
-    fotos = models.ManyToManyField('Foto')  # Referenciando o modelo Foto
-    data_visita = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    tecnico_responsavel = models.ForeignKey('Tecnico', on_delete=models.CASCADE) #
+    idsitio = models.ForeignKey('Sitio', on_delete=models.CASCADE) #
+    idtemplate_relatorio = models.ForeignKey('TemplateRelatorio', on_delete=models.CASCADE) #
+    data = models.DateField() #
+    fotos = models.ManyToManyField('Foto') #
+    data_visita = models.DateField() 
+    created_at = models.DateTimeField(auto_now_add=True) #
+    updated_at = models.DateTimeField(auto_now=True) #
 
     def save(self, *args, **kwargs):
         if not self.endereco_server:

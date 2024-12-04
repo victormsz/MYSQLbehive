@@ -19,7 +19,7 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-custom">Área de Administração</button>
           </form>
-          <form action="{% url 'generate_pdf' %}" method="GET" class="mb-3">
+          <form action="{% url 'reporter_info' %}" method="GET" class="mb-3">
             {% csrf_token %}
             <button type="submit" class="btn btn-custom">Gerar PDF</button>
           </form>

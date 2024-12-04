@@ -1,0 +1,150 @@
+{% if template_selecionado %}
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <div class="mb-4">
+    <h2>Adicionar Relatório</h2>
+    <form 
+        method="post" 
+        class="mb-4"
+        hx-post="{{ request.path }}"
+        hx-target="#report-name-message"
+        hx-swap="innerHTML"
+    >
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="template_nome" class="mb-2">Nome do Relatório:</label>
+        <input 
+          type="text" 
+          name="template_nome" 
+          id="template_nome" 
+          class="form-control" 
+          {%if template_selecionado.nome %}
+          placeholder="{{ template_selecionado.nome }}"
+            {% else %}  
+            placeholder= "Nome do Relatório"
+          {% endif %}   
+          value="{{ request.POST.template_nome|default:'' }}"
+        >
+      </div>
+      <div id="report-name-message" class="mt-2"></div>
+      <button type="submit" class="btn btn-custom mt-3">Salvar Relatório</button>
+    </form>
+  </div>
+
+  <div class="mb-4">
+    <h2>Escolher Técnico</h2>
+    <form 
+        method="post" 
+        class="mb-4"
+        hx-post="{{ request.path }}"
+        hx-target="#tecnico-message"
+        hx-swap="innerHTML"
+    >
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="tecnico" class="mb-2">Escolha um Técnico:</label>
+            <select name="tecnico" id="tecnico" class="form-control">
+                <option value="">Selecione um Técnico</option>
+                {% for tecnico_item in tecnicos %}
+                    <option value="{{ tecnico_item.idtecnico }}">
+                        {{ tecnico_item.nome }} (ID: {{ tecnico_item.idtecnico }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="tecnico-message"></div>
+
+        <button type="submit" class="btn btn-custom mt-3">Salvar Técnico</button>
+    </form>
+</div>
+
+
+  <div class="mb-4">
+    <h2>Escolher Sitio</h2>
+    <form 
+        method="post" 
+        class="mb-4"
+        hx-post="{{ request.path }}"
+        hx-target="#sitio-message"
+        hx-swap="innerHTML"
+    >
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="sitio" class="mb-2">Escolha um Sitio:</label>
+        <select name="sitio" id="sitio" class="form-control">
+          <option value="">Selecione um Sitio</option>
+          {% for sitio_item in sitios %}
+            <option value="{{ sitio_item.idsitio }}">
+              {{ sitio_item.nome }} (ID: {{ sitio_item.idsitio }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div id="sitio-message" class="mt-2"></div>
+      <button type="submit" class="btn btn-custom mt-3">Salvar Sitio</button>
+    </form>
+  </div>
+
+  <div class="mb-4">
+    <h2>escolher data</h2>
+    <form 
+        method="post" 
+        class="mb-4"
+        hx-post="{{ request.path }}"
+        hx-target="#data-message"
+        hx-swap="innerHTML"
+    >
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="data" class="mb-2">Escolha uma Data:</label>
+            <input 
+            type="date" 
+            name="data" 
+            id="data" 
+            class="form-control" 
+            value="{{ request.POST.data|default:'' }}"
+            >
+        </div>
+        <div id="data-message" class="mt-2"></div>
+        <button type="submit" class="btn btn-custom mt-3">Salvar Data</button>
+    </form>
+    </div>
+    
+    <div class="mb-4">
+        <h2>Adicionar Fotos</h2>
+        
+        {% if template_fotos %}
+        {% for pedido_foto in template_fotos %}
+            <div class="mb-3">
+                <h5 class="card-title">Foto {{ pedido_foto.idfoto }}: {{ pedido_foto.descricao }}</h5>
+                <form method="post" enctype="multipart/form-data" class="mb-3">
+                    {% csrf_token %}
+                    <div class="form-group
+                    ">
+                    <input type="file" name="foto" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-custom">Salvar Foto</button>
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Nenhum pedido de foto encontrado para este template.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="mb-4">
+      <h2>Criar Relatório</h2>
+      <form 
+          method="post" 
+          class="mb-4"
+          hx-post="{{ request.path }}"
+          hx-target="#data-message"
+          hx-swap="innerHTML"
+      >
+          {% csrf_token %}
+          <button type="submit" name="criar" class="btn btn-custom mt-3">Criar Relatório</button>
+      </form>
+  </div>
+{% endif %}

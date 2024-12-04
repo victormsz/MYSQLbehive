@@ -19,21 +19,32 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from reporter.views import SignUpView , gerar_pdf, fotos_por_sitio , Create_pdf , gerar_pdf_view, delete_foto
+from reporter import views
 from django.urls import path
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
-    path('generate-pdf/', gerar_pdf, name='generate_pdf'),
-    path("signup/", SignUpView.as_view(), name="signup"),
-    path('fotos/', fotos_por_sitio, name='fotos_por_sitio'),
-    path('gerar_pdf/', gerar_pdf_view, name='gerar_pdf_view'),
-    path('create_pdf/<int:sitio_id>/', Create_pdf, name='create_pdf'),
-    path('delete-foto/<int:idfoto>/', delete_foto, name='delete_foto'),
 
+    #admin, contas e home
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("admin/", admin.site.urls),
+    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("signup/", views.SignUpView.as_view(), name="signup"),
+
+    #criar pdf's
+    path('reporter_info/', views.selecionar_template, name='reporter_info'),
+    path('create_pdf/<int:sitio_id>/', views.create_pdf, name='create_pdf'),
+
+    #configurar fotos
+    path('fotos/', views.fotos_por_sitio, name='fotos_por_sitio'),
+    path('delete-foto/<int:idfoto>/', views.delete_foto, name='delete_foto'),
+
+    #configurar templates
+    #path('templates/', views.lista_templates, name='lista_templates'),
+    
+
+    #configurar RelatorioFinal
+    #path('adicionar-relatorio/', views.adicionar_relatorio, name='adicionar_relatorio'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

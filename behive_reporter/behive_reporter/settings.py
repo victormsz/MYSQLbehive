@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'behive_reporter.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'mydb',
+        'NAME': 'reporter',
         'ENGINE': 'mysql.connector.django',
         'USER': 'root',
         'PASSWORD': '2024%rootsql#',

@@ -2,17 +2,17 @@
 
 {% block content %}
 <div class="container">
-    <h1>Selecione um Sitio para Gerar o PDF</h1>
+    <h1>Selecione ou crie um sitio para Gerar o PDF</h1>
     
     <!-- Formulário para selecionar o Sitio -->
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
             <label for="sitio">Escolha um Sitio:</label>
+            <a href="http://127.0.0.1:8000/admin/reporter/sitio/add/" class="btn btn-success mt-3">Criar Sítio</a>
             <select name="sitio" id="sitio" class="form-control">
                 <option value="">Selecione um Sitio</option>
                 {% for sitio in sitios %}
-                    <!-- Corrigido: usar 'sitio.idsitio' ao invés de 'sitio.id' -->
                     <option value="{{ sitio.idsitio }}" {% if sitio.idsitio == sitio_selecionado %}selected{% endif %}>{{ sitio.nome }}</option>
                 {% endfor %}
             </select>
@@ -23,7 +23,30 @@
     {% if sitio_selecionado %}
         <h2>Fotos do Sitio Selecionado:</h2>
         <!-- Aqui você pode exibir as fotos ou qualquer outra informação relacionada ao sitio -->
-         
+        {% if fotos %}
+        <h2 class="mt-4">Fotos do Sítio "{{ nome_sitio }}":</h2>
+        <div class="row mt-4">
+            {% for foto in fotos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ foto.foto.url }}" class="card-img-top img-fluid" alt="{{ foto.descricao }}">
+                        <div class="card-body">
+                            <p class="card-text">{{ foto.descricao }}</p>
+                            {% if foto.idfoto %}
+                            <form method="post" action="{% url 'delete_foto' foto.idfoto %}" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        {% else %}
+                            <p class="text-muted">ID da foto não encontrado, não é possível excluir.</p>
+                        {% endif %}
+                        
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
         
         <!-- Link para gerar o PDF -->
         <a href="{% url 'create_pdf' sitio_id=sitio_selecionado %}" class="btn btn-success mt-3">Gerar PDF</a>
