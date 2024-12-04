@@ -1,5 +1,11 @@
 {% if template_selecionado %}
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+document.body.addEventListener('htmx:configRequest', (event) => {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    event.detail.headers['X-CSRFToken'] = csrftoken;
+});
+</script>
   <div class="mb-4">
     <h2>Adicionar Relatório</h2>
     <form 
@@ -17,7 +23,7 @@
           name="template_nome" 
           id="template_nome" 
           class="form-control" 
-          {%if template_selecionado.nome %}
+          {%if not template_selecionado.nome %}
           placeholder="{{ template_selecionado.nome }}"
             {% else %}  
             placeholder= "Nome do Relatório"
@@ -111,40 +117,61 @@
     </form>
     </div>
     
-    <div class="mb-4">
-        <h2>Adicionar Fotos</h2>
-        
-        {% if template_fotos %}
-        {% for pedido_foto in template_fotos %}
-            <div class="mb-3">
-                <h5 class="card-title">Foto {{ pedido_foto.idfoto }}: {{ pedido_foto.descricao }}</h5>
-                <form method="post" enctype="multipart/form-data" class="mb-3">
-                    {% csrf_token %}
-                    <div class="form-group
-                    ">
-                    <input type="file" name="foto" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-custom">Salvar Foto</button>
-            </form>
-        </div>
-        {% endfor %}
-        {% else %}
-        <p>Nenhum pedido de foto encontrado para este template.</p>
-        {% endif %}
-    </div>
 
-
-    <div class="mb-4">
+    <div class="mb-4"> 
       <h2>Criar Relatório</h2>
       <form 
           method="post" 
           class="mb-4"
           hx-post="{{ request.path }}"
-          hx-target="#data-message"
+          hx-target="#rel-message"
           hx-swap="innerHTML"
       >
           {% csrf_token %}
-          <button type="submit" name="criar" class="btn btn-custom mt-3">Criar Relatório</button>
+          <input type="hidden" name="criar" value="1">
+          <button type="submit" class="btn btn-custom mt-3">Criar Relatório</button>
       </form>
+    </div>
+{% endif %}
+
+<div id="rel-message"></div>
+
+
+{% if relatorio %}
+<div class="mb-4">
+    <h2>Carregar Fotos</h2>
+    {% csrf_token %}
+    <form 
+        method="post" 
+        enctype="multipart/form-data"
+        class="mb-4"
+        hx-post="{{ request.path }}"
+        hx-target="#foto-message"
+        hx-swap="innerHTML"
+    >
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="foto" class="mb-2">Selecionar Fotos:</label>
+            <input 
+                type="file" 
+                name="foto" 
+                id="foto" 
+                class="form-control" 
+                multiple
+                accept="image/*"
+            >
+        </div>
+        <input type="hidden" name="foto_upload" value="1">
+        <div id="foto-message" class="mt-2"></div>
+        <button type="submit" class="btn btn-custom mt-3">Enviar Fotos</button>
+    </form>
+</div>
+{% endif %}
+{% if messages %}
+  <div id="rel-message">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
   </div>
 {% endif %}
+  

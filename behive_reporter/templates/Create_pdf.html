@@ -1,57 +1,73 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="container">
-    <h1>Selecione ou crie um sitio para Gerar o PDF</h1>
-    
-    <!-- Formulário para selecionar o Sitio -->
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="sitio">Escolha um Sitio:</label>
-            <a href="http://127.0.0.1:8000/admin/reporter/sitio/add/" class="btn btn-success mt-3">Criar Sítio</a>
-            <select name="sitio" id="sitio" class="form-control">
-                <option value="">Selecione um Sitio</option>
-                {% for sitio in sitios %}
-                    <option value="{{ sitio.idsitio }}" {% if sitio.idsitio == sitio_selecionado %}selected{% endif %}>{{ sitio.nome }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary mt-2">GERAR PDF</button>
-    </form>
+{% block title %}Gerar PDF{% endblock %}
 
-    {% if sitio_selecionado %}
-        <h2>Fotos do Sitio Selecionado:</h2>
-        <!-- Aqui você pode exibir as fotos ou qualquer outra informação relacionada ao sitio -->
-        {% if fotos %}
-        <h2 class="mt-4">Fotos do Sítio "{{ nome_sitio }}":</h2>
-        <div class="row mt-4">
-            {% for foto in fotos %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="{{ foto.foto.url }}" class="card-img-top img-fluid" alt="{{ foto.descricao }}">
-                        <div class="card-body">
-                            <p class="card-text">{{ foto.descricao }}</p>
-                            {% if foto.idfoto %}
-                            <form method="post" action="{% url 'delete_foto' foto.idfoto %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                            </form>
-                        {% else %}
-                            <p class="text-muted">ID da foto não encontrado, não é possível excluir.</p>
-                        {% endif %}
-                        
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+{% block extra_head %}
+    <!-- HTMX library -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center py-5" style="background-color: #536eb3;">
+  <div class="col-md-10">
+    <div class="card shadow-sm" style="border: none; border-radius: 10px; background-color: #536eb3; color: white;">
+      <div class="card-body text-center">
+        <h1 class="display-4 mb-4">Gerar PDF</h1>
+
+        {% if user.is_authenticated %}
+          <div class="mb-4">
+            <h2>Selecionar Template</h2>
+            
+            {# Debug: Check templates #}
+            {% if not templates %}
+              <p class="text-danger">Nenhum template encontrado!</p>
+            {% endif %}
+
+            <form 
+              method="post" 
+              class="mb-4" 
+              hx-post="{{ request.path }}"
+              hx-target="#dynamic-content"
+              hx-swap="innerHTML"
+            >
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="template" class="mb-2">Escolha um Template:</label>
+                <select name="template" id="template" class="form-control">
+                  <option value="">Selecione um Template</option>
+                  {% for template in templates %}
+                    <option value="{{ template.idtemplate_relatorio }}" 
+                      {% if template.idtemplate_relatorio == template_selecionado.idtemplate_relatorio %}
+                        selected
+                      {% endif %}>
+                      {{ template.nome }} (ID: {{ template.idtemplate_relatorio }})
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-custom mt-3">Selecionar Template</button>
+            </form>
+
+            <!-- Dynamic Content Area -->
+            <div id="dynamic-content">
+              {% if template_selecionado %}
+                <form method="post" action="{% url 'gerar_pdf' %}">
+                  {% csrf_token %}
+                  <h3>Gerar PDF com Template: {{ template_selecionado.nome }}</h3>
+                  <button type="submit" class="btn btn-custom mt-3">Gerar PDF</button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <div class="login-prompt">
+            <h5 class="card-title">Você não está logado</h5>
+            <p class="card-text">Faça o login para acessar seu painel.</p>
+            <a href="{% url 'login' %}" class="btn btn-custom">Fazer Login</a>
+          </div>
         {% endif %}
-        
-        <!-- Link para gerar o PDF -->
-        <a href="{% url 'create_pdf' sitio_id=sitio_selecionado %}" class="btn btn-success mt-3">Gerar PDF</a>
-    {% elif sitio_selecionado is none %}
-        <p>Nenhuma foto encontrada para o sitio selecionado.</p>
-    {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

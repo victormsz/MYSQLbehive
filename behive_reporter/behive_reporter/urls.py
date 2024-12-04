@@ -19,6 +19,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from reporter.Methods.handles import _handle_upload_photos
+from reporter.Methods.report_generator import create_final_report
 from reporter import views
 from django.urls import path
 
@@ -32,11 +34,13 @@ urlpatterns = [
     path("signup/", views.SignUpView.as_view(), name="signup"),
 
     #criar pdf's
-    path('reporter_info/', views.selecionar_template, name='reporter_info'),
-    path('create_pdf/<int:sitio_id>/', views.create_pdf, name='create_pdf'),
+    path('reporter_info/', views.criar_relatorioFinal, name='reporter_info'),
+    path('create_report/', create_final_report, name='create_report'),  
+    path('pdf/', views.generate_pdf_report, name='pdf'),
 
     #configurar fotos
     path('fotos/', views.fotos_por_sitio, name='fotos_por_sitio'),
+    path('upload_photo/', _handle_upload_photos, name='upload_photo'),
     path('delete-foto/<int:idfoto>/', views.delete_foto, name='delete_foto'),
 
     #configurar templates

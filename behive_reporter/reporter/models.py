@@ -114,21 +114,19 @@ class TemplateRelatorio(models.Model):
 
 
 class RelatorioFinal(models.Model):
-    idrelatorio_final = models.AutoField(primary_key=True) #
-    nome= models.CharField(max_length=45) #
+    idrelatorio_final = models.AutoField(primary_key=True) 
+    nome= models.CharField(max_length=45) 
     endereco_server = models.CharField(max_length=150, blank=True, null=True, editable=False)
-    tecnico_responsavel = models.ForeignKey('Tecnico', on_delete=models.CASCADE) #
-    idsitio = models.ForeignKey('Sitio', on_delete=models.CASCADE) #
-    idtemplate_relatorio = models.ForeignKey('TemplateRelatorio', on_delete=models.CASCADE) #
-    data = models.DateField() #
-    fotos = models.ManyToManyField('Foto') #
-    data_visita = models.DateField() 
-    created_at = models.DateTimeField(auto_now_add=True) #
-    updated_at = models.DateTimeField(auto_now=True) #
+    tecnico_responsavel = models.ForeignKey('Tecnico', on_delete=models.CASCADE) 
+    idsitio = models.ForeignKey('Sitio', on_delete=models.CASCADE) 
+    idtemplate_relatorio = models.ForeignKey('TemplateRelatorio', on_delete=models.CASCADE) 
+    data = models.DateField() 
+    fotos = models.ManyToManyField('Foto', blank=True) 
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.endereco_server:
-            self.endereco_server = "relatorios/"  # substitua pelo endereço desejado
+            self.endereco_server = settings.MEDIA_URL + "relatorios/"  
         super().save(*args, **kwargs)
 
     def __str__(self):
